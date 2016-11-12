@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script>
+			(function(win,doc){
+				var nes={version:"0.0.5"},//版本
+				locals={}//存放local属性..
+				
+				var ap=Array.prototype,//常用属性local化
+				op=Object.prototype,
+				sp=String.prototype,
+				fp=Function.prototype,
+				slice=ap.slice,
+				body=doc.body,
+				testNode=doc.createElement('div'),
+				
+				toArray=function(arr){//将类数组变为数组，如Nodelist,Argument
+					return slice.call(arr)
+				},
+				
+				typeOf=function(o){//短小类型的判断
+					o==null ? String(o) : op.toString.call(o).slice(8,-1).toLowerCase()
+				},
+				
+				extend=function(o1,o2,override){//简单对象的扩展
+					for(var i in o2){
+						if(o1[i]==null|| override) o1[i]=o2[i]
+					}					
+				},
+				
+				createCache = function(max) {
+				      var keys = [],
+				        cache = {}
+				      return {
+				        set: function(key, value) {
+				          if (keys.length > this.length) {
+				            delete cache[keys.shift()]
+				          }
+				          cache[key] = value
+				          keys.push(key)
+				          return value
+				        },
+				        get: function(key) {
+				          if (typeof key === "undefined") return cache
+				          return cache[key]
+				        },
+				        length: max
+				      }
+    			},
+    			
+    			autoSet = function(fn) {
+				    return function(key, value) {
+				        if (typeOf(key) == "object") {
+				          for (var i in key) {
+				            fn.call(this, i, key[i])
+				          }
+				        } else {
+				          fn.call(this, key, value)
+				        }
+				        return this;
+				    }
+				},
+				
+			    assert = function(fn) {
+			    	try {
+				        return fn()
+				    } catch (e) {
+				        return false
+				    } finally {
+				        testNode = document.createElement("div");
+			    	}
+				}
+								
+			})(window,document);
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>
